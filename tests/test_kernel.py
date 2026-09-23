@@ -72,5 +72,11 @@ class OverlapTests(unittest.TestCase):
         self.assertFalse(disks_overlap(0.0, 0.0, 1.0, 0.0, 0.0, -5.0))
 
 
+
+class FiniteRimTests(unittest.TestCase):
+    def test_non_finite_is_missing(self) -> None:
+        self.assertEqual(keep(False, float("nan"), 100.0, 40.0), "missing")
+
+
 if __name__ == "__main__":
     unittest.main()

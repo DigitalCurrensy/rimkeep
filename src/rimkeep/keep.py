@@ -23,6 +23,12 @@ A missing PSR setback is not a fail by itself.
 
 from __future__ import annotations
 
+import math
+
+
+def _bad(value: float | None) -> bool:
+    return value is not None and not math.isfinite(value)
+
 
 def keep(
     on_rim: bool | None,
@@ -31,6 +37,8 @@ def keep(
     width_m: float | None,
 ) -> str:
     if on_rim is None:
+        return "missing"
+    if _bad(inner_slope_deg) or _bad(psr_setback_m) or _bad(width_m):
         return "missing"
     if on_rim:
         return "on_rim"
