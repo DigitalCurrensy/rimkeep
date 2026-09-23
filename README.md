@@ -1,32 +1,35 @@
 # RIMKEEP
 
-RIMKEEP scores the keep-out around a crater rim. The rim is not a road.
+For a traverse planner who wants to drive a crater rim.
 
 **Owner:** Digital Currensy Inc.
-**License:** Apache-2.0. Our code only. Cited maps stay with their authors.
+**License:** Apache-2.0. Our code only. Cited data and papers stay with their authors.
+**Status:** Private until the owner publishes it.
 
 ## What it decides
 
-On the rim, or off it. On the rim is not a route.
+On the rim, or not. On the rim is not a road.
 
 ## The rule
 
-The keep-out is the product. A point on the rim fails the walk. Slope, a missing sun angle, equal sites, an undeclared identity, or missing inputs fail closed. A synthetic case that sits off the rim can pass the keep-out and still is not a road.
+Standing on the rim fails first. If the pin is off the rim, a sun-shadow setback under 50 m fails, then an inner slope over 15 degrees, then a width under 30 m. Anything else is ok, and ok is not a road. A missing rim is not ok.
 
 ## Worked cases
 
-Surveyor crater, Faustini Rim A, and synthetic rims stored in this repository. Each one forces one gate: off-rim, sun angle, slope, thin data, on-rim first, a null sun angle, equal sites, an undeclared identity, or missing inputs. They are the desk’s cases, not a traverse plan.
+Surveyor crater and Faustini Rim A are named. The synthetic rims each force one gate. They are not a traverse plan, and this repository does not fetch an elevation model.
 
 ## What it will not do
 
 - Walk the rim because the picture looks flat.
-- Fetch an elevation model in order to print the score.
 - Call a keep-out a road.
+- Treat ok as a landing clearance.
 
 ## Run
 
 ```
+git clone <this repo>
+cd rimkeep
 PYTHONPATH=src python -m unittest tests.test_kernel
 ```
 
-Notes under `docs/` are the build record. This page is the description.
+Python 3.12. No third-party packages. The test is the demo.
