@@ -14,9 +14,11 @@
 
 """On the rim is not a road.
 
-Order: standing on the rim, then a shadow setback under 50 m,
-then an inner slope over 15 degrees, then a width under 30 m.
+Order: standing on the rim, then a negative slope, width, or setback,
+then a shadow setback under 50 m, then an inner slope over 15 degrees,
+then a width under 30 m.
 Ok is not a road. A missing input is not ok.
+A missing PSR setback is not a fail by itself.
 """
 
 from __future__ import annotations
@@ -32,6 +34,12 @@ def keep(
         return "missing"
     if on_rim:
         return "on_rim"
+    if inner_slope_deg is not None and inner_slope_deg < 0:
+        return "missing"
+    if width_m is not None and width_m < 0:
+        return "missing"
+    if psr_setback_m is not None and psr_setback_m < 0:
+        return "missing"
     if psr_setback_m is not None and psr_setback_m < 50:
         return "psr"
     if inner_slope_deg is None or width_m is None:

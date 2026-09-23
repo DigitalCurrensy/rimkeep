@@ -43,6 +43,11 @@ class KeepTests(unittest.TestCase):
         self.assertEqual(keep(None, 10, 80, 40), "missing")
         self.assertEqual(keep(False, None, None, 40), "missing")
 
+    def test_negative_slope_width_or_setback_is_missing(self) -> None:
+        self.assertEqual(keep(False, -1, 80, 40), "missing")
+        self.assertEqual(keep(False, 10, 80, -1), "missing")
+        self.assertEqual(keep(False, 10, -1, 40), "missing")
+
 
 class OverlapTests(unittest.TestCase):
     def test_a_point_overlaps_itself_when_radii_are_positive(self) -> None:
@@ -61,6 +66,10 @@ class OverlapTests(unittest.TestCase):
         lat = 60.0
         dlon = 4.0 / (meters_per_deg_lat * math.cos(math.radians(lat)))
         self.assertTrue(disks_overlap(lat, 0.0, 3.0, lat, dlon, 3.0))
+
+    def test_negative_radius_does_not_overlap(self) -> None:
+        self.assertFalse(disks_overlap(0.0, 0.0, -1.0, 0.0, 0.0, 1.0))
+        self.assertFalse(disks_overlap(0.0, 0.0, 1.0, 0.0, 0.0, -5.0))
 
 
 if __name__ == "__main__":

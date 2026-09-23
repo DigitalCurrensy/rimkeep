@@ -16,17 +16,18 @@ A crater-rim keep-out from on-rim, shadow setback, slope, and width. Ok is not a
 
 1. `on_rim` is missing → `missing`
 2. `on_rim` is true → `on_rim`
-3. PSR setback is not missing and is under 50 m → `psr`
-4. slope or width is missing → `missing`
-5. slope is over 15 degrees → `slope`
-6. width is under 30 m → `thin`
-7. otherwise → `ok`
+3. slope, width, or PSR setback is present and negative → `missing`
+4. PSR setback is not missing and is under 50 m → `psr`
+5. slope or width is missing → `missing`
+6. slope is over 15 degrees → `slope`
+7. width is under 30 m → `thin`
+8. otherwise → `ok`
 
-Ok is not a road. A missing `on_rim`, slope, or width is not ok. A missing PSR setback does not fail by itself.
+Ok is not a road. A missing `on_rim`, slope, or width is not ok. A missing PSR setback does not fail by itself. A negative slope, width, or setback is missing.
 
 ## Overlap
 
-The overlap helper is a local plane using a 1,737,400 m lunar radius and is not a geodesic. Latitude meters per degree are that radius times π/180. Longitude scale is that times cos(latitude).
+The overlap is a haversine on a 1,737,400 m sphere. It is not a surveyed control network. Disks overlap when that distance is less than the sum of the radii. A negative radius does not overlap. Ok is not a road.
 
 ## Worked rows
 

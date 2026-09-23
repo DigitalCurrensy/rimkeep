@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Local plane from an explicit lunar radius. Not a surveyed geodesic."""
+"""Haversine on a sphere of radius 1,737,400 m. Not a surveyed control network."""
 
 import math
 
@@ -21,12 +21,16 @@ meters_per_deg_lat = MOON_RADIUS_M * math.pi / 180
 
 
 def disks_overlap(lat1, lon1, r1_m, lat2, lon2, r2_m) -> bool:
-    """local plane, not a surveyed geodesic.
+    """True when haversine distance is less than the sum of the radii.
 
-    Latitude scale is meters_per_deg_lat from a 1,737,400 m lunar radius.
-    Longitude scale is that times cos(latitude).
+    A negative radius does not overlap.
     """
-    meters_per_deg_lon = meters_per_deg_lat * math.cos(math.radians(lat1))
-    dx = (lon1 - lon2) * meters_per_deg_lon
-    dy = (lat1 - lat2) * meters_per_deg_lat
-    return math.hypot(dx, dy) < (r1_m + r2_m)
+    if r1_m < 0 or r2_m < 0:
+        return False
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    d_phi = math.radians(lat2 - lat1)
+    d_lam = math.radians(lon2 - lon1)
+    a = math.sin(d_phi / 2.0) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(d_lam / 2.0) ** 2
+    c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(max(0.0, 1.0 - a)))
+    return (MOON_RADIUS_M * c) < (r1_m + r2_m)
