@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+import math
 import sys
 import unittest
 from pathlib import Path
@@ -23,6 +24,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from rimkeep.keep import keep  # noqa: E402
+from rimkeep.overlap import MOON_RADIUS_M, disks_overlap, meters_per_deg_lat  # noqa: E402
 
 
 class KeepTests(unittest.TestCase):
@@ -40,6 +42,25 @@ class KeepTests(unittest.TestCase):
     def test_missing_is_not_ok(self) -> None:
         self.assertEqual(keep(None, 10, 80, 40), "missing")
         self.assertEqual(keep(False, None, None, 40), "missing")
+
+
+class OverlapTests(unittest.TestCase):
+    def test_a_point_overlaps_itself_when_radii_are_positive(self) -> None:
+        self.assertTrue(disks_overlap(0.0, 0.0, 1.0, 0.0, 0.0, 1.0))
+        self.assertTrue(disks_overlap(-12.5, 40.25, 0.5, -12.5, 40.25, 25.0))
+
+    def test_one_degree_of_latitude_does_not_overlap_at_100_m(self) -> None:
+        self.assertFalse(disks_overlap(0.0, 0.0, 100.0, 1.0, 0.0, 100.0))
+        self.assertFalse(disks_overlap(20.0, 10.0, 100.0, 21.0, 10.0, 100.0))
+
+    def test_points_a_few_meters_apart_overlap_when_radii_cover_the_gap(self) -> None:
+        self.assertEqual(MOON_RADIUS_M, 1_737_400)
+        self.assertEqual(meters_per_deg_lat, MOON_RADIUS_M * math.pi / 180.0)
+        four_m_deg = 4.0 / meters_per_deg_lat
+        self.assertTrue(disks_overlap(0.0, 10.0, 3.0, four_m_deg, 10.0, 3.0))
+        lat = 60.0
+        dlon = 4.0 / (meters_per_deg_lat * math.cos(math.radians(lat)))
+        self.assertTrue(disks_overlap(lat, 0.0, 3.0, lat, dlon, 3.0))
 
 
 if __name__ == "__main__":

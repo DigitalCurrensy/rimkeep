@@ -15,5 +15,7 @@
 """RIMKEEP — a crater rim is a keep-out, not a road."""
 
 from .keep import keep
+from .overlap import disks_overlap
 
-__all__ = ["keep"]
+__all__ = ["disks_overlap", "keep"]
+

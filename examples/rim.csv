@@ -1,0 +1,7 @@
+on_rim,slope_deg,psr_m,width_m
+true,20,20,10
+false,10,80,40
+false,,,
+false,16,80,40
+false,10,40,40
+false,10,80,20

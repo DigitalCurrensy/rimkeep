@@ -4,24 +4,33 @@ For a traverse planner who wants to drive a crater rim.
 
 **Owner:** Digital Currensy Inc.
 **Copyright:** 2026 Digital Currensy Inc.
-**License:** Apache-2.0. The file named LICENSE is the standard license and is not edited. The copyright notice is in NOTICE and at the top of each source file. Cited data and papers stay with their authors.
+**License:** Apache-2.0. The file named LICENSE is the standard license and is not edited.
+
 ## What it decides
 
-On the rim, or not. On the rim is not a road.
+A crater-rim keep-out from on-rim, shadow setback, slope, and width. Ok is not a road.
 
 ## The rule
 
-Standing on the rim fails first. If the pin is off the rim, a sun-shadow setback under 50 m fails, then an inner slope over 15 degrees, then a width under 30 m. Anything else is ok, and ok is not a road. A missing rim is not ok.
+`keep` returns the first gate that trips, in this order:
 
-## Worked cases
+1. `on_rim` is missing → `missing`
+2. `on_rim` is true → `on_rim`
+3. PSR setback is not missing and is under 50 m → `psr`
+4. slope or width is missing → `missing`
+5. slope is over 15 degrees → `slope`
+6. width is under 30 m → `thin`
+7. otherwise → `ok`
 
-Surveyor crater and Faustini Rim A are named. The synthetic rims each force one gate. They are not a traverse plan, and this repository does not fetch an elevation model.
+Ok is not a road. A missing `on_rim`, slope, or width is not ok. A missing PSR setback does not fail by itself.
 
-## What it will not do
+## Overlap
 
-- Walk the rim because the picture looks flat.
-- Call a keep-out a road.
-- Treat ok as a landing clearance.
+The overlap helper is a local plane using a 1,737,400 m lunar radius and is not a geodesic. Latitude meters per degree are that radius times π/180. Longitude scale is that times cos(latitude).
+
+## Worked rows
+
+`examples/rim.csv` uses the header `on_rim,slope_deg,psr_m,width_m`. It includes one on-rim row and one ok row. Empty fields mean missing. Worked rows are not a traverse plan and no elevation model is fetched.
 
 ## Run
 
@@ -29,6 +38,9 @@ Surveyor crater and Faustini Rim A are named. The synthetic rims each force one 
 git clone <this repo>
 cd rimkeep
 PYTHONPATH=src python -m unittest tests.test_kernel
+PYTHONPATH=src python -m rimkeep examples/rim.csv
 ```
 
-Python 3.12. No third-party packages. The test is the demo.
+Python 3.11 or newer. No third-party packages.
+
+Copyright 2026 Digital Currensy Inc. Apache-2.0.

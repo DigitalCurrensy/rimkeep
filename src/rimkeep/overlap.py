@@ -12,11 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Local plane from an explicit lunar radius. Not a surveyed geodesic."""
+
 import math
 
+MOON_RADIUS_M = 1_737_400
+meters_per_deg_lat = MOON_RADIUS_M * math.pi / 180
 
-def disks_overlap(lat1, lon1, r1_m, lat2, lon2, r2_m, meters_per_deg=30300.0) -> bool:
-    # Local plane. Not a surveyed geodesic.
-    dx = (lon1 - lon2) * meters_per_deg * math.cos(math.radians(lat1))
-    dy = (lat1 - lat2) * meters_per_deg
+
+def disks_overlap(lat1, lon1, r1_m, lat2, lon2, r2_m) -> bool:
+    """local plane, not a surveyed geodesic.
+
+    Latitude scale is meters_per_deg_lat from a 1,737,400 m lunar radius.
+    Longitude scale is that times cos(latitude).
+    """
+    meters_per_deg_lon = meters_per_deg_lat * math.cos(math.radians(lat1))
+    dx = (lon1 - lon2) * meters_per_deg_lon
+    dy = (lat1 - lat2) * meters_per_deg_lat
     return math.hypot(dx, dy) < (r1_m + r2_m)
