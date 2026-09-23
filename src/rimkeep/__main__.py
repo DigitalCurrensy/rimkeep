@@ -17,6 +17,7 @@
 from __future__ import annotations
 
 import csv
+import math
 import sys
 from pathlib import Path
 
@@ -49,6 +50,15 @@ def _parse_float(value: str | None) -> float | None:
     return float(text)
 
 
+
+def _show(value: float | None) -> str:
+    if value is None:
+        return "missing"
+    if not math.isfinite(value):
+        return "bad"
+    return f"{value:.10g}"
+
+
 def score_csv(path: Path) -> list[str]:
     with path.open(newline="") as handle:
         reader = csv.DictReader(handle)
@@ -57,13 +67,14 @@ def score_csv(path: Path) -> list[str]:
             raise ValueError("header must be on_rim,slope_deg,psr_m,width_m")
         verdicts: list[str] = []
         for row in reader:
+            on_rim = _parse_on_rim(row["on_rim"])
+            slope = _parse_float(row["slope_deg"])
+            setback = _parse_float(row["psr_m"])
+            width = _parse_float(row["width_m"])
+            word = keep(on_rim, slope, setback, width)
+            on_text = "missing" if on_rim is None else ("true" if on_rim else "false")
             verdicts.append(
-                keep(
-                    _parse_on_rim(row["on_rim"]),
-                    _parse_float(row["slope_deg"]),
-                    _parse_float(row["psr_m"]),
-                    _parse_float(row["width_m"]),
-                )
+                f"{word} on_rim={on_text} slope={_show(slope)} setback={_show(setback)} width={_show(width)}"
             )
     return verdicts
 

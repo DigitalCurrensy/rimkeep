@@ -23,7 +23,7 @@ A crater-rim keep-out from on-rim, shadow setback, slope, and width. Ok is not a
 7. width is under 30 m → `thin`
 8. otherwise → `ok`
 
-Ok is not a road. A missing `on_rim`, slope, or width is not ok. A non-finite number is missing. A missing PSR setback does not fail by itself. A negative slope, width, or setback is missing. A non-finite overlap coordinate raises ValueError ("bad number") and is not treated as separate.
+Ok is not a road. A missing `on_rim`, slope, or width is not ok. The line prints on_rim, slope, setback, and width next to the word. A non-finite number is missing. A missing PSR setback does not fail by itself. A negative slope, width, or setback is missing. A non-finite overlap coordinate raises ValueError ("bad number") and is not treated as separate.
 
 ## Overlap
 

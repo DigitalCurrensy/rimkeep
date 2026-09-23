@@ -84,5 +84,19 @@ class FiniteRimTests(unittest.TestCase):
         self.assertEqual(str(ctx.exception), "bad number")
 
 
+
+class PrintedLineTests(unittest.TestCase):
+    def test_inputs_are_on_the_line(self) -> None:
+        import subprocess
+        repo = Path(__file__).resolve().parents[1]
+        proc = subprocess.run(
+            [sys.executable, "-m", "rimkeep", str(repo / "examples" / "rim.csv")],
+            cwd=repo, env={**__import__("os").environ, "PYTHONPATH": str(repo / "src")},
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertEqual(proc.stdout.splitlines()[0], "on_rim on_rim=true slope=20 setback=20 width=10")
+
+
 if __name__ == "__main__":
     unittest.main()
