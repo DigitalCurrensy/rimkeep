@@ -78,5 +78,11 @@ class FiniteRimTests(unittest.TestCase):
         self.assertEqual(keep(False, float("nan"), 100.0, 40.0), "missing")
 
 
+    def test_non_finite_overlap_is_not_separate(self) -> None:
+        with self.assertRaises(ValueError) as ctx:
+            disks_overlap(float("nan"), 0.0, 1.0, 0.0, 0.0, 1.0)
+        self.assertEqual(str(ctx.exception), "bad number")
+
+
 if __name__ == "__main__":
     unittest.main()

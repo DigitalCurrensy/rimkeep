@@ -25,6 +25,9 @@ def disks_overlap(lat1, lon1, r1_m, lat2, lon2, r2_m) -> bool:
 
     A negative radius does not overlap.
     """
+    nums = (lat1, lon1, r1_m, lat2, lon2, r2_m)
+    if any(not math.isfinite(value) for value in nums):
+        raise ValueError("bad number")
     if r1_m < 0 or r2_m < 0:
         return False
     phi1 = math.radians(lat1)
