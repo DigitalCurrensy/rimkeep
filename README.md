@@ -4,8 +4,6 @@ For a traverse planner who wants to drive a crater rim.
 
 **Owner:** Digital Currensy Inc.
 **License:** Apache-2.0. Our code only. Cited data and papers stay with their authors.
-**Status:** Private until the owner publishes it.
-
 ## What it decides
 
 On the rim, or not. On the rim is not a road.
