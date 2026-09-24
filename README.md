@@ -23,6 +23,33 @@ PYTHONPATH=src python -m rimkeep examples/span.csv
 
 The rest of this file is the rule that command prints.
 
+## Record
+
+`--json` prints one object. The process exit code is that object's `exit`. 0 is a pass word (`ok`, `pass`, `scored`, `path`). 1 is a refusal. 2 means the file could not be read. `keep` is false. `absent` is what this output does not contain: a stamp, measured basin months, and the points inside a `.laz` file.
+
+This object is not WaterML and it is not a USGS response.
+
+```json
+{
+  "absent": [
+    "stamp",
+    "measured_months",
+    "laz_points"
+  ],
+  "desk": "rimkeep",
+  "exit": 0,
+  "formula": "On the rim is not a road.",
+  "keep": false,
+  "rows": [
+    {
+      "line": "ok on_rim=false slope=1.888809177 setback=80 width=303.2335042",
+      "word": "ok"
+    }
+  ],
+  "word": "ok"
+}
+```
+
 
 For a traverse planner who wants to drive a crater rim.
 

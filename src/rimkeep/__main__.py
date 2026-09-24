@@ -22,6 +22,7 @@ import sys
 from pathlib import Path
 
 from .keep import keep
+from .record import finish
 from .overlap import distance_m, grade_deg
 
 HEADER = ("on_rim", "slope_deg", "psr_m", "width_m")
@@ -103,16 +104,18 @@ def score_csv(path: Path) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
+    as_json = "--json" in args
+    args = [item for item in args if item != "--json"]
     if len(args) != 1:
-        print("usage: python -m rimkeep examples/rim.csv", file=sys.stderr)
+        print("usage: python -m rimkeep examples/rim.csv [--json]", file=sys.stderr)
         return 2
     try:
-        for verdict in score_csv(Path(args[0])):
-            print(verdict)
+        lines = score_csv(Path(args[0]))
     except (OSError, ValueError) as exc:
         print(str(exc), file=sys.stderr)
         return 2
-    return 0
+    words = [line.split()[0] for line in lines]
+    return finish("rimkeep", "On the rim is not a road.", lines, as_json, words)
 
 
 if __name__ == "__main__":
