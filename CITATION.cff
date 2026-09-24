@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: If you use this library, cite the repository.
+title: rimkeep
+abstract: Haversine width and grade between two points on a sphere of radius 1,737,400 m.
+authors:
+  - name: Digital Currensy Inc.
+license: Apache-2.0
+repository-code: https://github.com/DigitalCurrensy/rimkeep
