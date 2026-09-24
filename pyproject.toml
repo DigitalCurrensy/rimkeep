@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rimkeep"
 version = "0.1.0"
-description = "Score a crater-rim keep-out from on-rim, shadow setback, slope, and width."
+description = "Haversine width and grade on a 1,737,400 m sphere. Ok is not a road."
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 authors = [{ name = "Digital Currensy Inc." }]

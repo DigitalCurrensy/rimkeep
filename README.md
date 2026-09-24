@@ -1,5 +1,29 @@
 # RIMKEEP
 
+[![check](https://github.com/DigitalCurrensy/rimkeep/actions/workflows/check.yml/badge.svg)](https://github.com/DigitalCurrensy/rimkeep/actions/workflows/check.yml)
+
+For a rim check when you have two points and their elevations.
+
+Width and grade come from those points. The distance is a haversine on a sphere of radius 1,737,400 m. Overlap uses the same sphere. It is not a geodesic survey.
+
+Ok is not a road.
+
+## Install
+
+```bash
+pip install -e .
+PYTHONPATH=src python -m unittest tests.test_kernel
+```
+
+## First command
+
+```bash
+PYTHONPATH=src python -m rimkeep examples/span.csv
+```
+
+The rest of this file is the rule that command prints.
+
+
 For a traverse planner who wants to drive a crater rim.
 
 **Owner:** Digital Currensy Inc.
