@@ -8,7 +8,7 @@ For a traverse planner who wants to drive a crater rim.
 
 ## What it decides
 
-A crater-rim keep-out from on-rim, shadow setback, slope, and width. Ok is not a road.
+A crater-rim keep-out from on-rim, shadow setback, slope, and width. Ok is not a road. `examples/span.csv` computes the width as a haversine on the 1,737,400 m sphere and the slope as the grade of the two elevations over that width.
 
 ## The rule
 

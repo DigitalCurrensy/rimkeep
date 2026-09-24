@@ -97,6 +97,20 @@ class PrintedLineTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stderr)
         self.assertEqual(proc.stdout.splitlines()[0], "on_rim on_rim=true slope=20 setback=20 width=10")
 
+    def test_span_is_a_haversine_and_a_grade(self) -> None:
+        import subprocess
+        repo = Path(__file__).resolve().parents[1]
+        proc = subprocess.run(
+            [sys.executable, "-m", "rimkeep", str(repo / "examples" / "span.csv")],
+            cwd=repo, env={**__import__("os").environ, "PYTHONPATH": str(repo / "src")},
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertEqual(
+            proc.stdout.strip(),
+            "ok on_rim=false slope=1.888809177 setback=80 width=303.2335042",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

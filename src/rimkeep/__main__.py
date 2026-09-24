@@ -22,8 +22,10 @@ import sys
 from pathlib import Path
 
 from .keep import keep
+from .overlap import distance_m, grade_deg
 
 HEADER = ("on_rim", "slope_deg", "psr_m", "width_m")
+SPAN_HEADER = ("on_rim", "elev1_m", "elev2_m", "psr_m", "lat1", "lon1", "lat2", "lon2")
 
 
 def _blank(value: str | None) -> str:
@@ -63,6 +65,26 @@ def score_csv(path: Path) -> list[str]:
     with path.open(newline="") as handle:
         reader = csv.DictReader(handle)
         names = tuple((reader.fieldnames or ()))
+        if names == SPAN_HEADER:
+            verdicts = []
+            for row in reader:
+                on_rim = _parse_on_rim(row["on_rim"])
+                elev1 = _parse_float(row["elev1_m"])
+                elev2 = _parse_float(row["elev2_m"])
+                setback = _parse_float(row["psr_m"])
+                coords = [_parse_float(row[name]) for name in ("lat1", "lon1", "lat2", "lon2")]
+                if None in (elev1, elev2, *coords):
+                    slope = None
+                    width = None
+                else:
+                    width = distance_m(*coords)
+                    slope = grade_deg(elev2 - elev1, width)
+                word = keep(on_rim, slope, setback, width)
+                on_text = "missing" if on_rim is None else ("true" if on_rim else "false")
+                verdicts.append(
+                    f"{word} on_rim={on_text} slope={_show(slope)} setback={_show(setback)} width={_show(width)}"
+                )
+            return verdicts
         if names != HEADER:
             raise ValueError("header must be on_rim,slope_deg,psr_m,width_m")
         verdicts: list[str] = []

@@ -20,6 +20,26 @@ MOON_RADIUS_M = 1_737_400
 meters_per_deg_lat = MOON_RADIUS_M * math.pi / 180
 
 
+def distance_m(lat1, lon1, lat2, lon2) -> float:
+    """Haversine distance on a sphere of radius 1,737,400 m."""
+    nums = (lat1, lon1, lat2, lon2)
+    if any(not math.isfinite(value) for value in nums):
+        raise ValueError("bad number")
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    d_phi = math.radians(lat2 - lat1)
+    d_lam = math.radians(lon2 - lon1)
+    a = math.sin(d_phi / 2.0) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(d_lam / 2.0) ** 2
+    c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(max(0.0, 1.0 - a)))
+    return MOON_RADIUS_M * c
+
+
+def grade_deg(rise_m: float, run_m: float) -> float:
+    if not math.isfinite(rise_m) or not math.isfinite(run_m) or run_m <= 0:
+        raise ValueError("bad number")
+    return math.degrees(math.atan(rise_m / run_m))
+
+
 def disks_overlap(lat1, lon1, r1_m, lat2, lon2, r2_m) -> bool:
     """True when haversine distance is less than the sum of the radii.
 
@@ -30,10 +50,4 @@ def disks_overlap(lat1, lon1, r1_m, lat2, lon2, r2_m) -> bool:
         raise ValueError("bad number")
     if r1_m < 0 or r2_m < 0:
         return False
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    d_phi = math.radians(lat2 - lat1)
-    d_lam = math.radians(lon2 - lon1)
-    a = math.sin(d_phi / 2.0) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(d_lam / 2.0) ** 2
-    c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(max(0.0, 1.0 - a)))
-    return (MOON_RADIUS_M * c) < (r1_m + r2_m)
+    return distance_m(lat1, lon1, lat2, lon2) < (r1_m + r2_m)
