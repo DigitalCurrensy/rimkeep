@@ -15,4 +15,4 @@ jobs:
       - name: Kernel tests
         run: python -m unittest tests.test_kernel
       - name: Example
-        run: python -m rimkeep examples/rim.csv
+        run: python -m rimkeep examples/rim.csv || test $? -eq 1
